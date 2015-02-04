@@ -45,6 +45,16 @@ function quijauaagenda_cpts() {
 
 function quijauaagenda_taxonomies() {
 
+    register_taxonomy(
+        'quijauaagenda_event_type',
+        'quijauaagenda_events',
+        array(
+            'label' => __( 'Tipo de Evento' ),
+            'rewrite' => array( 'slug' => 'tipo-evento' ),
+            'hierarchical' => true,
+        )
+    );
+
 }
 
 function quijauaagenda_shortcodes() {
