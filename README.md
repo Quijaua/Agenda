@@ -18,3 +18,15 @@ A simple and efficient WordPress plugin that implements the event management
 
 1. Download, install and active [Plugin Dependencies](https://wordpress.org/plugins/plugin-dependencies/)
 
+2. Download, install and active [meta-box](https://github.com/rilwis/meta-box/)
+
+3. Clone this repository on wp-content/plugins folder.
+
+```
+git clone git@github.com:Quijaua/Agenda.git quijaua-agenda 
+```
+
+4. Active plugin.
+
+5. Have fun!!
+
