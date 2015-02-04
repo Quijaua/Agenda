@@ -14,3 +14,7 @@ A simple and efficient WordPress plugin that implements the event management
 
 5. Navigation of events Calendar
 
+## How to use
+
+1. Download, install and active [Plugin Dependencies](https://wordpress.org/plugins/plugin-dependencies/)
+

@@ -5,12 +5,12 @@
  * Version: 0.0.1
  * Author: Eduardo Alencar de Oliveira
  * License: GPL3
+ * Depends: Meta Box
  */
 //Metabox custom fields http://metabox.io/docs/getting-started/
 // Plugin constants
 
 //
-
 function quijauaagenda_cpts() {
 
     $labels = array(
@@ -57,27 +57,85 @@ function quijauaagenda_taxonomies() {
 
 }
 
+function quijauaagenda_metaboxes() {
+
+    $prefix = 'evt_';
+
+    $meta_boxes[] = array(
+        'id'       => 'event-details',
+        'title'    => 'Detalhes do evento',
+        'pages'    => array( 'quijauaagenda_events'),
+        'context'  => 'normal',
+        'priority' => 'high',
+
+        'fields' => array(
+            array(
+                'name'  => 'Data',
+                'desc'  => 'Formato: dd/mm/yy',
+                'id'    => $prefix . 'date',
+                'type'  => 'date',
+                'std'   => '',
+                'class' => 'custom-class',
+                'clone' => false,
+                'js_options' => array(
+                    'autoSize'        => true,
+                    'buttonText'      => __( 'Select Date', 'meta-box' ),
+                    'dateFormat'      => __( 'dd/mm/yy', 'meta-box' ),
+                    'showButtonPanel' => true,
+                ),
+            ),
+
+            array(
+                'name'  => 'Hora',
+                'desc'  => 'Formato: HH:MM',
+                'id'    => $prefix . 'time',
+                'type'  => 'time',
+                'std'   => '',
+                'class' => 'custom-class',
+                'clone' => false,
+            ),
+
+            array(
+                'name'  => 'Link para informações',
+                'desc'  => 'Formato: http://www.examplo.com.br',
+                'id'    => $prefix . 'details_link',
+                'type'  => 'url',
+                'std'   => '',
+                'class' => 'custom-class',
+                'clone' => false,
+            ),
+        )
+    );
+    return $meta_boxes;
+}
+
 function quijauaagenda_shortcodes() {
 
+}
+
+function quijauaagenda_change_default_title() {
+    $screen = get_current_screen();
+
+    // For CPT 1
+    if  ( 'quijauaagenda_events' === $screen->post_type ) {
+        $title = 'Nome do Evento/Seminário/Curso';
+    }
+    return $title;
 }
 
 function quijauaagenda_init() {
     quijauaagenda_cpts();
     quijauaagenda_taxonomies();
+    //quijauaagenda_metaboxes();
     quijauaagenda_shortcodes();
 }
 
+// Actions
 add_action('init', 'quijauaagenda_init');
 
-// Cpt: Eventos Nome do Evento
-/**
- * - Nome do Evento/Seminário/Curso
-- Data
-- Horário
-- Local
-- Descrição
-- Link para informações
- */
+// Filters
+add_filter( 'rwmb_meta_boxes', 'quijauaagenda_metaboxes' );
+add_filter( 'enter_title_here', 'quijauaagenda_change_default_title' );
 
 
 //
