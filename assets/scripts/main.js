@@ -1,4 +1,6 @@
 (function($){
+    $('#evt_date').mask('99/99/9999');
+    $('#evt_time').mask('99:99');
     $('#frm-agenda').validate({
 
         submitHandler: function(form) {
