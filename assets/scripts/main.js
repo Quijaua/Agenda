@@ -21,6 +21,7 @@
                 .done(function(response) {
                     if(1 === response.status) {
                         swal("Sucesso", "Evento enviado com sucesso. Aguarde moderação!", "success")
+                        $('#frm-agenda')[0].reset();
                         return;
                     }
                     swal("Oops...", "Ocorreu um erro ao enviar o evento. Por favor, tente novamente.", "error");
