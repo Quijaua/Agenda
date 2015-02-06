@@ -42,9 +42,9 @@ moment.locale("pt-br");
          clickEvents: {
           click: function(target) {
             if(target.events.length) {
-              var daysContainer = $('#mini-clndr').find('.days-container');
+              var daysContainer = $(document).find('.clndr-grid');
               daysContainer.toggleClass('show-events', true);
-              $('#mini-clndr').find('.x-button').click( function() {
+              $(document).find('.x-button').click( function() {
                 daysContainer.toggleClass('show-events', false);
               });
             }

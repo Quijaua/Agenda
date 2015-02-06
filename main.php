@@ -153,9 +153,18 @@ function quijauaagenda_shortcode() {
                 <% }); %>
                 <div class="days">
                     <% _.each(days, function(day) { %>
-                    <div class="<%= day.classes %>"><%= day.day %></div>
+                      <div class="<%= day.classes %>" id="<%= day.id %>">
+                        <% if (day.events.length > 0) { %>
+                            <% _.each(day.events, function(event){ %>
+                          <div class="event <%= event.class %>"><%= day.day %></div>
+                        <% }) %>
+                        <% } %>
+                        <% if (day.events.length  == 0) { %>
+                        <div class="number"><%= day.day %></div>
+                        <% } %>
+                      </div>
                     <% }); %>
-                </div>
+                  </div>
             </div>
 
         </div>
