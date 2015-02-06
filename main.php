@@ -116,6 +116,7 @@ function quijauaagenda_metaboxes() {
 function quijauaagenda_shortcode() {
     ob_start();
 ?>
+    <div id="pass-in-a-template" class="cal2"></div>
     <h1>Agenda</h1>
     <form method="post" id="frm-agenda">
         <input type="text" name="title" id="title" data-rule-required="true" data-msg-required="Campo NOME DO EVENTO/SEMINÁRIO/CURSO é obrigatório" placeholder="NOME DO EVENTO/SEMINÁRIO/CURSO" />
@@ -127,6 +128,55 @@ function quijauaagenda_shortcode() {
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
+    <script id="mini-clndr-template" type="text/template">
+
+        <div class="controls">
+            <div class="clndr-previous-button">&lsaquo;</div><div class="month"><%= month %></div><div class="clndr-next-button">&rsaquo;</div>
+        </div>
+
+        <div class="days-container">
+            <div class="days">
+                <div class="headers">
+                    <% _.each(daysOfTheWeek, function(day) { %><div class="day-header"><%= day %></div><% }); %>
+                </div>
+                <% _.each(days, function(day) { %><div class="<%= day.classes %>" id="<%= day.id %>"><%= day.day %></div><% }); %>
+            </div>
+            <div class="events">
+                <div class="headers">
+                    <div class="x-button">x</div>
+                    <div class="event-header">EVENTS</div>
+                </div>
+                <div class="events-list">
+                    <% _.each(eventsThisMonth, function(event) { %>
+                    <div class="event">
+                        <a href="<%= event.url %>"><%= moment(event.date).format('MMMM Do') %>: <%= event.title %></a>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+
+    </script>
+    <script type="text/template" id="clndr-template">
+        <div class="clndr-controls">
+            <div class="clndr-previous-button">&lsaquo;</div>
+            <div class="month"><%= month %></div>
+            <div class="clndr-next-button">&rsaquo;</div>
+        </div>
+        <div class="clndr-grid">
+            <div class="days-of-the-week">
+                <% _.each(daysOfTheWeek, function(day) { %>
+                <div class="header-day"><%= day %></div>
+                <% }); %>
+                <div class="days">
+                    <% _.each(days, function(day) { %>
+                    <div class="<%= day.classes %>"><%= day.day %></div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+        <div class="clndr-today-button">Today</div>
+    </script>
 <?php
     return ob_get_clean();
 }
@@ -143,6 +193,7 @@ function quijauaagenda_change_default_title() {
 function quijauaagenda_scripts() {
     wp_enqueue_style( 'quijauaagenda-main', QUIJAUAAGENDA_CSS_URL . 'main.css' );
     wp_enqueue_style( 'quijauaagenda-sweetalert-css', QUIJAUAAGENDA_CSS_URL . 'sweet-alert.css' );
+    wp_enqueue_style( 'quijauaagenda-clndr-css', QUIJAUAAGENDA_CSS_URL . 'clndr.css' );
     wp_enqueue_script( 'quijauaagenda-plugins', QUIJAUAAGENDA_JS_URL . 'plugins.js', array('jquery'), '1.0.0', true );
     wp_enqueue_script( 'quijauaagenda-sweetalert', QUIJAUAAGENDA_JS_URL . 'sweetalert/lib/sweet-alert.min.js', array(), '1.0.0', true );
     wp_enqueue_script( 'quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true );
@@ -197,5 +248,3 @@ add_action( 'wp_ajax_quijauaagenda_save_event', 'quijauaagenda_save_event_callba
 // Filters
 add_filter( 'rwmb_meta_boxes', 'quijauaagenda_metaboxes' );
 add_filter( 'enter_title_here', 'quijauaagenda_change_default_title' );
-
-// http://glad.github.io/glDatePicker/

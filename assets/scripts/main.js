@@ -1,3 +1,4 @@
+var clndr = {};
 (function($){
     $('#evt_date').mask('99/99/9999');
     $('#evt_time').mask('99:99');
@@ -33,5 +34,24 @@
 
     });
 
+    var eventsArray = [
+        { date: '2015-02-18', title: 'Carnaval', url: 'http://github.com/kylestetz/CLNDR' },
+        { date: moment().format('YYYY-MM-') + '23', title: 'Another Event' }
+    ];
+
+    clndr.passInATemplate = $('#pass-in-a-template').clndr({
+        template: $('#clndr-template').html(),
+        events: eventsArray,
+        clickEvents: {
+            click:         function(target) { console.log(target); },
+            nextMonth:     function(month)  { console.log('next month'); },
+            previousMonth: function(month)  { console.log('previous month'); },
+            nextYear:      function(month)  { console.log('next year'); },
+            previousYear:  function(month)  { console.log('previous year'); },
+            today:         function(month)  { console.log('today'); },
+            onMonthChange: function(month)  { console.log('on month change'); },
+            onYearChange:  function(month)  { console.log('on year change'); }
+        }
+    });
 
 })(jQuery);
