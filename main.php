@@ -191,7 +191,7 @@ function quijauaagenda_change_default_title() {
 }
 
 function quijauaagenda_scripts() {
-
+     global $post;
     wp_enqueue_style( 'quijauaagenda-main', QUIJAUAAGENDA_CSS_URL . 'main.css' );
     wp_enqueue_style( 'quijauaagenda-sweetalert-css', QUIJAUAAGENDA_CSS_URL . 'sweet-alert.css' );
     wp_enqueue_style( 'quijauaagenda-clndr-css', QUIJAUAAGENDA_CSS_URL . 'clndr.css' );
@@ -204,8 +204,33 @@ function quijauaagenda_scripts() {
 
     wp_enqueue_script( 'quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true );
 
+    $events = array();
+    $args = array( 'posts_per_page' => -1, 'post_type'=> 'quijauaagenda_events', 'post_status' => 'publish');
+
+    $events_posts = get_posts($args);
+
+    foreach($events_posts as $event_post)
+    {
+
+        setup_postdata($event_post);
+        $event = new stdClass;
+        $event->id = $event_post->ID;
+        $event->date = get_post_meta( $event_post->ID, 'evt_date', true);
+        $event->time = get_post_meta( $event_post->ID, 'evt_time', true);
+        $event->title = get_the_title();
+        $event->description = get_the_content();
+        $event->place = get_post_meta( $event_post->ID, 'evt_place', true);
+
+        $events[] = $event;
+    }
+    wp_reset_postdata();
+
     wp_localize_script( 'quijauaagenda-main', 'quijauaagenda_ajax',
-        array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+        array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'events'   => $events
+        )
+    );
 }
 
 function quijauaagenda_save_event_callback() {
@@ -221,7 +246,7 @@ function quijauaagenda_save_event_callback() {
 
     if( $event_post_id ) {
 
-        add_post_meta( $event_post_id, 'evt_date', $_POST['evt_date'] );
+        add_post_meta( $event_post_id, 'evt_date', implode("-",array_reverse(explode("/",$_POST['evt_date']))) );
         add_post_meta( $event_post_id, 'evt_time', $_POST['evt_time'] );
         add_post_meta( $event_post_id, 'evt_place', sanitize_text_field($_POST['evt_place']) );
         $result = array(
