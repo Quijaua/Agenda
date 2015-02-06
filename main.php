@@ -7,10 +7,14 @@
  * License: GPL3
  * Depends: Meta Box
  */
-//Metabox custom fields http://metabox.io/docs/getting-started/
-// Plugin constants
+if ( ! defined( 'QUIJAUAAGENDA_URL' ) ) {
+    define( 'QUIJAUAAGENDA_URL', plugin_dir_url( __FILE__ ) );
+}
 
-//
+define( 'QUIJAUAAGENDA_JS_URL', trailingslashit( QUIJAUAAGENDA_URL . 'assets/scripts' ) );
+define( 'QUIJAUAAGENDA_CSS_URL', trailingslashit( QUIJAUAAGENDA_URL . 'assets/styles' ) );
+
+
 function quijauaagenda_cpts() {
 
     $labels = array(
@@ -86,7 +90,7 @@ function quijauaagenda_metaboxes() {
             ),
 
             array(
-                'name'  => 'Hora',
+                'name'  => 'Horário',
                 'desc'  => 'Formato: HH:MM',
                 'id'    => $prefix . 'time',
                 'type'  => 'time',
@@ -96,10 +100,10 @@ function quijauaagenda_metaboxes() {
             ),
 
             array(
-                'name'  => 'Link para informações',
-                'desc'  => 'Formato: http://www.examplo.com.br',
-                'id'    => $prefix . 'details_link',
-                'type'  => 'url',
+                'name'  => 'Local',
+                'desc'  => '',
+                'id'    => $prefix . 'place',
+                'type'  => 'text',
                 'std'   => '',
                 'class' => 'custom-class',
                 'clone' => false,
@@ -109,41 +113,88 @@ function quijauaagenda_metaboxes() {
     return $meta_boxes;
 }
 
-function quijauaagenda_shortcodes() {
-
+function quijauaagenda_shortcode() {
+    ob_start();
+?>
+    <h1>Agenda</h1>
+    <form method="post" id="frm-agenda">
+        <input type="text" name="title" id="title" data-rule-required="true" data-msg-required="Campo NOME DO EVENTO/SEMINÁRIO/CURSO é obrigatório" placeholder="NOME DO EVENTO/SEMINÁRIO/CURSO" />
+        <br />
+        <input type="text" name="evt_date" id="evt_date" data-rule-required="true" data-msg-required="Campo DATA é obrigatório" placeholder="DATA" />
+        <input type="text" name="evt_time" id="evt_time" data-rule-required="true" data-msg-required="Campo HORÁRIO é obrigatório" placeholder="HORÁRIO" />
+        <input type="text" name="evt_place" id="evt_place" data-rule-required="true" data-msg-required="Campo LOCAL é obrigatório" placeholder="LOCAL" />
+        <input type="text" name="description" id="description" data-rule-required="true" data-msg-required="Campo DESCRIÇÃO é obrigatório" placeholder="DESCRIÇÃO" />
+        <br />
+        <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
+    </form>
+<?php
+    return ob_get_clean();
 }
 
 function quijauaagenda_change_default_title() {
     $screen = get_current_screen();
 
-    // For CPT 1
     if  ( 'quijauaagenda_events' === $screen->post_type ) {
         $title = 'Nome do Evento/Seminário/Curso';
     }
     return $title;
 }
 
+function quijauaagenda_scripts() {
+    wp_enqueue_style( 'quijauaagenda-main', QUIJAUAAGENDA_CSS_URL . 'main.css' );
+    wp_enqueue_script( 'quijauaagenda-plugins', QUIJAUAAGENDA_JS_URL . 'plugins.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true );
+
+    wp_localize_script( 'quijauaagenda-main', 'quijauaagenda_ajax',
+        array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+}
+
+function quijauaagenda_save_event_callback() {
+    // Create post object
+    $event_post = array(
+        'post_title'    => sanitize_text_field($_POST['title']),
+        'post_content'  => sanitize_text_field($_POST['description']),
+        'post_status'   => 'draft',
+        'post_type'     => 'quijauaagenda_events',
+    );
+
+    $event_post_id = wp_insert_post( $event_post );
+
+    if( $event_post_id ) {
+
+        add_post_meta( $event_post_id, 'evt_date', $_POST['evt_date'] );
+        add_post_meta( $event_post_id, 'evt_time', $_POST['evt_time'] );
+        add_post_meta( $event_post_id, 'evt_place', sanitize_text_field($_POST['evt_place']) );
+        $result = array(
+            'status' => 1
+        );
+        echo json_encode($result);
+        wp_die();
+
+    }
+
+    $result = array(
+        'status' => 0
+    );
+    echo json_encode($result);
+    wp_die();
+
+}
+
 function quijauaagenda_init() {
     quijauaagenda_cpts();
     quijauaagenda_taxonomies();
-    //quijauaagenda_metaboxes();
-    quijauaagenda_shortcodes();
 }
 
 // Actions
-add_action('init', 'quijauaagenda_init');
+add_action( 'init', 'quijauaagenda_init' );
+add_shortcode( 'agenda', 'quijauaagenda_shortcode' );
+add_action( 'wp_enqueue_scripts', 'quijauaagenda_scripts' );
+add_action( 'wp_ajax_quijauaagenda_save_event', 'quijauaagenda_save_event_callback' );
 
 // Filters
 add_filter( 'rwmb_meta_boxes', 'quijauaagenda_metaboxes' );
 add_filter( 'enter_title_here', 'quijauaagenda_change_default_title' );
 
-
-//
-
-// categoria tipo: eventos internos, atividades especias, eventos externos e diferenciar cor no front
-
-// shortocode para exibição do calendario e form no front
-
-// Exibição das informações no front http://fullcalendar.io/
-
+// http://glad.github.io/glDatePicker/
 
