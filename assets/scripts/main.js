@@ -12,13 +12,20 @@
                 'evt_place'     : $('#evt_place').val(),
             };
 
-            $.post(
-                quijauaagenda_ajax.ajax_url,
-                data,
-                function(response) {
-                    console.log(response);
-                }
-            )
+            $.ajax({
+                type: "POST",
+                url: quijauaagenda_ajax.ajax_url,
+                data :data,
+                dataType : 'json',
+            })
+                .done(function(response) {
+                    if(1 === response.status) {
+                        swal("Sucesso", "Evento enviado com sucesso. Aguarde moderação!", "success")
+                        return;
+                    }
+                    swal("Oops...", "Ocorreu um erro ao enviar o evento. Por favor, tente novamente.", "error");
+                    return;
+                });
         }
 
     });

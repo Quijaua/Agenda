@@ -142,7 +142,9 @@ function quijauaagenda_change_default_title() {
 
 function quijauaagenda_scripts() {
     wp_enqueue_style( 'quijauaagenda-main', QUIJAUAAGENDA_CSS_URL . 'main.css' );
+    wp_enqueue_style( 'quijauaagenda-sweetalert-css', QUIJAUAAGENDA_CSS_URL . 'sweetalert/lib/sweet-alert.css' );
     wp_enqueue_script( 'quijauaagenda-plugins', QUIJAUAAGENDA_JS_URL . 'plugins.js', array('jquery'), '1.0.0', true );
+    wp_enqueue_script( 'quijauaagenda-sweetalert', QUIJAUAAGENDA_JS_URL . 'sweetalert/lib/sweet-alert.min.js', array(), '1.0.0', true );
     wp_enqueue_script( 'quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true );
 
     wp_localize_script( 'quijauaagenda-main', 'quijauaagenda_ajax',
