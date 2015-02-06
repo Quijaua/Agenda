@@ -34,14 +34,9 @@ var clndr = {};
 
     });
 
-    var eventsArray = [
-        { date: '2015-02-18', title: 'Carnaval', url: 'http://github.com/kylestetz/CLNDR' },
-        { date: moment().format('YYYY-MM-') + '23', title: 'Another Event' }
-    ];
-
     clndr.passInATemplate = $('#pass-in-a-template').clndr({
         template: $('#clndr-template').html(),
-        events: eventsArray,
+        events: quijauaagenda_ajax.events,
         clickEvents: {
             click:         function(target) { console.log(target); },
             nextMonth:     function(month)  { console.log('next month'); },
