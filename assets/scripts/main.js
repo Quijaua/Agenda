@@ -1,4 +1,5 @@
 var clndr = {};
+moment.locale("pt-br");
 (function($){
     $('#evt_date').mask('99/99/9999');
     $('#evt_time').mask('99:99');
@@ -37,16 +38,18 @@ var clndr = {};
     clndr.passInATemplate = $('#pass-in-a-template').clndr({
         template: $('#clndr-template').html(),
         events: quijauaagenda_ajax.events,
-        clickEvents: {
-            click:         function(target) { console.log(target); },
-            nextMonth:     function(month)  { console.log('next month'); },
-            previousMonth: function(month)  { console.log('previous month'); },
-            nextYear:      function(month)  { console.log('next year'); },
-            previousYear:  function(month)  { console.log('previous year'); },
-            today:         function(month)  { console.log('today'); },
-            onMonthChange: function(month)  { console.log('on month change'); },
-            onYearChange:  function(month)  { console.log('on year change'); }
-        }
+         clickEvents: {
+          click: function(target) {
+            if(target.events.length) {
+              var daysContainer = $('#mini-clndr').find('.days-container');
+              daysContainer.toggleClass('show-events', true);
+              $('#mini-clndr').find('.x-button').click( function() {
+                daysContainer.toggleClass('show-events', false);
+              });
+            }
+          }
+        },
+        adjacentDaysChangeMonth: true,
     });
 
 })(jQuery);

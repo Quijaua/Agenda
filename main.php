@@ -128,6 +128,7 @@ function quijauaagenda_shortcode() {
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
+    <div id="mini-clndr">
     <script id="mini-clndr-template" type="text/template">
 
         <div class="controls">
@@ -157,6 +158,7 @@ function quijauaagenda_shortcode() {
         </div>
 
     </script>
+    </div>
     <script type="text/template" id="clndr-template">
         <div class="clndr-controls">
             <div class="clndr-previous-button">&lsaquo;</div>
@@ -174,8 +176,27 @@ function quijauaagenda_shortcode() {
                     <% }); %>
                 </div>
             </div>
+
         </div>
-        <div class="clndr-today-button">Today</div>
+         <div class="events">
+                <div class="headers">
+                    <div class="x-button">x</div>
+                    <div class="event-header">Eventos</div>
+                </div>
+                <div class="events-list">
+                    <% _.each(eventsThisMonth, function(event) { %>
+                    <div class="event">
+                        <a href="<%= event.url %>"><%=moment(event.date, 'YYYY-MM-DD').format('LL') %>: </a>
+                        <p><strong>Evento: </strong><%= event.title %></p>
+                        <p><strong>Descrição: </strong><%= event.description %></p>
+                        <p><strong>Horário: </strong><%= event.time %></p>
+                        <p><strong>Local: </strong><%= event.place %></p>
+
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+
     </script>
 <?php
     return ob_get_clean();
@@ -211,14 +232,13 @@ function quijauaagenda_scripts() {
 
     foreach($events_posts as $event_post)
     {
-
         setup_postdata($event_post);
         $event = new stdClass;
         $event->id = $event_post->ID;
         $event->date = get_post_meta( $event_post->ID, 'evt_date', true);
         $event->time = get_post_meta( $event_post->ID, 'evt_time', true);
-        $event->title = get_the_title();
-        $event->description = get_the_content();
+        $event->title = $event_post->post_title;
+        $event->description = $event_post->post_content;
         $event->place = get_post_meta( $event_post->ID, 'evt_place', true);
 
         $events[] = $event;
