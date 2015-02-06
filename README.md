@@ -30,3 +30,11 @@ git clone git@github.com:Quijaua/Agenda.git quijaua-agenda
 
 5. Have fun!!
 
+# Shortcode
+
+1. Create page
+2. On content field use 
+```
+[agenda]
+```
+
