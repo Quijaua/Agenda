@@ -14,6 +14,7 @@ moment.locale("pt-br");
                 'evt_date'      : $('#evt_date').val(),
                 'evt_time'      : $('#evt_time').val(),
                 'evt_place'     : $('#evt_place').val(),
+                'evt_link'      : $('#evt_link').val(),
             };
 
             $.ajax({

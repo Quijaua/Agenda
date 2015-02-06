@@ -108,6 +108,16 @@ function quijauaagenda_metaboxes() {
                 'class' => 'custom-class',
                 'clone' => false,
             ),
+
+            array(
+                'name'  => 'Link para informações',
+                'desc'  => 'http://www.exemplo.com.br',
+                'id'    => $prefix . 'link',
+                'type'  => 'url',
+                'std'   => '',
+                'class' => 'custom-class',
+                'clone' => false,
+            ),
         )
     );
     return $meta_boxes;
@@ -125,6 +135,7 @@ function quijauaagenda_shortcode() {
         <input type="text" name="evt_time" id="evt_time" data-rule-required="true" data-msg-required="Campo HORÁRIO é obrigatório" placeholder="HORÁRIO" />
         <input type="text" name="evt_place" id="evt_place" data-rule-required="true" data-msg-required="Campo LOCAL é obrigatório" placeholder="LOCAL" />
         <input type="text" name="description" id="description" data-rule-required="true" data-msg-required="Campo DESCRIÇÃO é obrigatório" placeholder="DESCRIÇÃO" />
+        <input type="text" name="evt_link" id="evt_link" data-rule-required="true" data-msg-required="Campo LINK PARA INFORMAÇÕES é obrigatório" placeholder="LINK PARA INFORMAÇÕES" />
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
@@ -156,16 +167,17 @@ function quijauaagenda_shortcode() {
                 <div class="events-list">
                     <% _.each(eventsThisMonth, function(event) { %>
                     <div class="event">
-                        <a href="<%= event.url %>"><%=moment(event.date, 'YYYY-MM-DD').format('LL') %>: </a>
+                        <a href="<%= event.link %>"><%=moment(event.date, 'YYYY-MM-DD').format('LL') %>: </a>
                         <p><strong>Evento: </strong><%= event.title %></p>
                         <p><strong>Descrição: </strong><%= event.description %></p>
                         <p><strong>Horário: </strong><%= event.time %></p>
                         <p><strong>Local: </strong><%= event.place %></p>
+                        <p><strong>Link para informações: </strong><%= event.link %></p>
 
                     </div>
                     <% }); %>
                 </div>
-            </div>
+        </div>
 
     </script>
 <?php
@@ -210,6 +222,7 @@ function quijauaagenda_scripts() {
         $event->title = $event_post->post_title;
         $event->description = $event_post->post_content;
         $event->place = get_post_meta( $event_post->ID, 'evt_place', true);
+        $event->place = get_post_meta( $event_post->ID, 'evt_link', true);
         $event->class = implode(' ', wp_get_post_terms($event_post->ID, 'quijauaagenda_event_type', array("fields" => "slugs")));
 
         $events[] = $event;
@@ -225,6 +238,7 @@ function quijauaagenda_scripts() {
 }
 
 function quijauaagenda_save_event_callback() {
+
     // Create post object
     $event_post = array(
         'post_title'    => sanitize_text_field($_POST['title']),
@@ -240,6 +254,8 @@ function quijauaagenda_save_event_callback() {
         add_post_meta( $event_post_id, 'evt_date', implode("-",array_reverse(explode("/",$_POST['evt_date']))) );
         add_post_meta( $event_post_id, 'evt_time', $_POST['evt_time'] );
         add_post_meta( $event_post_id, 'evt_place', sanitize_text_field($_POST['evt_place']) );
+        add_post_meta( $event_post_id, 'evt_link', $_POST['evt_link'] );
+
         $result = array(
             'status' => 1
         );
