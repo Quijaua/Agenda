@@ -1,6 +1,15 @@
 var clndr = {};
 moment.locale("pt-br");
 (function($){
+
+    $('.events-of-month').click(function (e) {
+        //e.preventDefault();
+        console.log('clicou');
+        $('.event').modal();
+
+        return false;
+    });
+
     $('#evt_date').mask('99/99/9999');
     $('#evt_time').mask('99:99');
     $('#frm-agenda').validate({
@@ -21,7 +30,7 @@ moment.locale("pt-br");
                 type: "POST",
                 url: quijauaagenda_ajax.ajax_url,
                 data :data,
-                dataType : 'json',
+                dataType : 'json'
             })
                 .done(function(response) {
                     if(1 === response.status) {
@@ -52,5 +61,4 @@ moment.locale("pt-br");
         },
         adjacentDaysChangeMonth: true,
     });
-
 })(jQuery);

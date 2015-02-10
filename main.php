@@ -173,16 +173,16 @@ function quijauaagenda_shortcode() {
                     <div class="x-button">x</div>
                     <div class="event-header">Eventos</div>
                 </div>
+                <a href="#" class="events-of-month">Eventos nesse mês</a>
                 <div class="events-list">
                     <% _.each(eventsThisMonth, function(event) { %>
-                    <div class="event">
+                    <div class="events-list-item">
                         <a href="<%= event.link %>"><%=moment(event.date, 'YYYY-MM-DD').format('LL') %>: </a>
                         <p><strong>Evento: </strong><%= event.title %></p>
                         <p><strong>Descrição: </strong><%= event.description %></p>
                         <p><strong>Horário: </strong><%= event.time %></p>
                         <p><strong>Local: </strong><%= event.place %></p>
                         <p><strong>Link para informações: </strong><%= event.link %></p>
-
                     </div>
                     <% }); %>
                 </div>
@@ -203,47 +203,49 @@ function quijauaagenda_change_default_title() {
 }
 
 function quijauaagenda_scripts() {
-     global $post;
-    wp_enqueue_style( 'quijauaagenda-main', QUIJAUAAGENDA_CSS_URL . 'main.css' );
-    wp_enqueue_style( 'quijauaagenda-sweetalert-css', QUIJAUAAGENDA_CSS_URL . 'sweet-alert.css' );
-    wp_enqueue_style( 'quijauaagenda-clndr-css', QUIJAUAAGENDA_CSS_URL . 'clndr.css' );
-    wp_enqueue_script( 'quijauaagenda-plugins', QUIJAUAAGENDA_JS_URL . 'plugins.js', array('jquery'), '1.0.0', true );
-    wp_enqueue_script( 'quijauaagenda-sweetalert', QUIJAUAAGENDA_JS_URL . 'sweetalert/lib/sweet-alert.min.js', array(), '1.0.0', true );
-    wp_enqueue_script( 'quijauaagenda-json2', QUIJAUAAGENDA_JS_URL . 'CLNDR/example/json2.js', array(), '1.0.0', true );
-    wp_enqueue_script( 'quijauaagenda-underscore', 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js', array(), '1.0.0', true );
-    wp_enqueue_script( 'quijauaagenda-moment2', QUIJAUAAGENDA_JS_URL . 'CLNDR/example/moment.js', array(), '1.0.0', true );
-    wp_enqueue_script( 'quijauaagenda-clndr', QUIJAUAAGENDA_JS_URL . 'CLNDR/src/clndr.js', array(), '1.0.0', true );
+    global $post;
+    if ( has_shortcode( $post->post_content, 'agenda' ) ) {
 
-    wp_enqueue_script( 'quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_style('quijauaagenda-maincss', QUIJAUAAGENDA_CSS_URL . 'main.css');
+        wp_enqueue_style('quijauaagenda-sweetalert-css', QUIJAUAAGENDA_CSS_URL . 'sweet-alert.css');
+        wp_enqueue_style('quijauaagenda-clndr-css', QUIJAUAAGENDA_CSS_URL . 'clndr.css');
+        wp_enqueue_script('quijauaagenda-plugins', QUIJAUAAGENDA_JS_URL . 'plugins.js', array('jquery'), '1.0.0', true);
+        wp_enqueue_script('quijauaagenda-sweetalert', QUIJAUAAGENDA_JS_URL . 'sweetalert/lib/sweet-alert.min.js', array(), '1.0.0', true);
+        wp_enqueue_script('quijauaagenda-json2', QUIJAUAAGENDA_JS_URL . 'CLNDR/example/json2.js', array(), '1.0.0', true);
+        wp_enqueue_script('quijauaagenda-underscore', 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js', array(), '1.0.0', true);
+        wp_enqueue_script('quijauaagenda-moment2', QUIJAUAAGENDA_JS_URL . 'CLNDR/example/moment.js', array(), '1.0.0', true);
+        wp_enqueue_script('quijauaagenda-clndr', QUIJAUAAGENDA_JS_URL . 'CLNDR/src/clndr.js', array(), '1.0.0', true);
 
-    $events = array();
-    $args = array( 'posts_per_page' => -1, 'post_type'=> 'quijauaagenda_events', 'post_status' => 'publish');
+        wp_enqueue_script('quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true);
 
-    $events_posts = get_posts($args);
+        $events = array();
+        $args = array('posts_per_page' => -1, 'post_type' => 'quijauaagenda_events', 'post_status' => 'publish');
 
-    foreach($events_posts as $event_post)
-    {
-        setup_postdata($event_post);
-        $event = new stdClass;
-        $event->id = $event_post->ID;
-        $event->date = get_post_meta( $event_post->ID, 'evt_date', true);
-        $event->time = get_post_meta( $event_post->ID, 'evt_time', true);
-        $event->title = $event_post->post_title;
-        $event->description = $event_post->post_content;
-        $event->place = get_post_meta( $event_post->ID, 'evt_place', true);
-        $event->place = get_post_meta( $event_post->ID, 'evt_link', true);
-        $event->class = implode(' ', wp_get_post_terms($event_post->ID, 'quijauaagenda_event_type', array("fields" => "slugs")));
+        $events_posts = get_posts($args);
 
-        $events[] = $event;
+        foreach ($events_posts as $event_post) {
+            setup_postdata($event_post);
+            $event = new stdClass;
+            $event->id = $event_post->ID;
+            $event->date = get_post_meta($event_post->ID, 'evt_date', true);
+            $event->time = get_post_meta($event_post->ID, 'evt_time', true);
+            $event->title = $event_post->post_title;
+            $event->description = $event_post->post_content;
+            $event->place = get_post_meta($event_post->ID, 'evt_place', true);
+            $event->place = get_post_meta($event_post->ID, 'evt_link', true);
+            $event->class = implode(' ', wp_get_post_terms($event_post->ID, 'quijauaagenda_event_type', array("fields" => "slugs")));
+
+            $events[] = $event;
+        }
+        wp_reset_postdata();
+
+        wp_localize_script('quijauaagenda-main', 'quijauaagenda_ajax',
+            array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'events' => $events
+            )
+        );
     }
-    wp_reset_postdata();
-
-    wp_localize_script( 'quijauaagenda-main', 'quijauaagenda_ajax',
-        array(
-            'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'events'   => $events
-        )
-    );
 }
 
 function quijauaagenda_save_event_callback() {
@@ -291,6 +293,7 @@ add_action( 'init', 'quijauaagenda_init' );
 add_shortcode( 'agenda', 'quijauaagenda_shortcode' );
 add_action( 'wp_enqueue_scripts', 'quijauaagenda_scripts' );
 add_action( 'wp_ajax_quijauaagenda_save_event', 'quijauaagenda_save_event_callback' );
+add_action( 'wp_ajax_nopriv_quijauaagenda_save_event', 'quijauaagenda_save_event_callback' );
 
 // Filters
 add_filter( 'rwmb_meta_boxes', 'quijauaagenda_metaboxes' );
