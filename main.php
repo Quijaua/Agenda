@@ -135,7 +135,7 @@ function quijauaagenda_shortcode() {
         <input type="text" name="evt_time" id="evt_time" data-rule-required="true" data-msg-required="Campo HORÁRIO é obrigatório" placeholder="HORÁRIO" />
         <input type="text" name="evt_place" id="evt_place" data-rule-required="true" data-msg-required="Campo LOCAL é obrigatório" placeholder="LOCAL" />
         <input type="text" name="description" id="description" data-rule-required="true" data-msg-required="Campo DESCRIÇÃO é obrigatório" placeholder="DESCRIÇÃO" />
-        <input type="text" name="evt_link" id="evt_link" data-rule-required="true" data-msg-required="Campo LINK PARA INFORMAÇÕES é obrigatório" placeholder="LINK PARA INFORMAÇÕES" />
+        <input type="text" name="evt_link" id="evt_link" data-rule-required="true" data-msg-required="Campo LINK PARA INFORMAÇÕES é obrigatório" data-rule-url="true" data-msg-url="Digite uma URL válida" placeholder="LINK PARA INFORMAÇÕES" />
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
