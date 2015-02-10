@@ -139,7 +139,7 @@ function quijauaagenda_shortcode() {
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
-
+    <a href="#" class="events-of-month">Eventos nesse mês</a>
     <script type="text/template" id="clndr-template">
         <div class="clndr-controls">
             <div class="clndr-previous-button">&lsaquo;</div>
@@ -169,12 +169,12 @@ function quijauaagenda_shortcode() {
 
         </div>
          <div class="events">
-                <div class="headers">
-                    <div class="x-button">x</div>
-                    <div class="event-header">Eventos</div>
-                </div>
+
+             <% if (eventsThisMonth.length > 0) { %>
                 <a href="#" class="events-of-month">Eventos nesse mês</a>
+             <% } %>
                 <div class="events-list">
+                    <h1>Eventos</h1>
                     <% _.each(eventsThisMonth, function(event) { %>
                     <div class="events-list-item">
                         <a href="<%= event.link %>"><%=moment(event.date, 'YYYY-MM-DD').format('LL') %>: </a>
@@ -232,7 +232,7 @@ function quijauaagenda_scripts() {
             $event->title = $event_post->post_title;
             $event->description = $event_post->post_content;
             $event->place = get_post_meta($event_post->ID, 'evt_place', true);
-            $event->place = get_post_meta($event_post->ID, 'evt_link', true);
+            $event->link = get_post_meta($event_post->ID, 'evt_link', true);
             $event->class = implode(' ', wp_get_post_terms($event_post->ID, 'quijauaagenda_event_type', array("fields" => "slugs")));
 
             $events[] = $event;

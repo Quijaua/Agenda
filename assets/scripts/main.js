@@ -2,13 +2,15 @@ var clndr = {};
 moment.locale("pt-br");
 (function($){
 
-    $('.events-of-month').click(function (e) {
+
+
+    /*$('.events-of-month').click(function (e) {
         //e.preventDefault();
         console.log('clicou');
-        $('.event').modal();
+        $('.events-list').modal();
 
         return false;
-    });
+    });*/
 
     $('#evt_date').mask('99/99/9999');
     $('#evt_time').mask('99:99');
@@ -51,6 +53,7 @@ moment.locale("pt-br");
          clickEvents: {
           click: function(target) {
             if(target.events.length) {
+                console.log("reste");
               var daysContainer = $(document).find('.clndr-grid');
               daysContainer.toggleClass('show-events', true);
               $(document).find('.x-button').click( function() {
@@ -58,6 +61,13 @@ moment.locale("pt-br");
               });
             }
           }
+        },
+        doneRendering: function() {
+            $('.events-of-month').on('click', function(e) {
+                e.preventDefault();
+                $('.events-list').modal();
+                console.log("ckic");
+            });
         },
         adjacentDaysChangeMonth: true,
     });
