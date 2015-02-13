@@ -37,7 +37,7 @@ function quijauaagenda_cpts() {
         'description'   =>   __( 'Eventos', '' ),
         'public'        =>   true,
         'show_in_menu'  =>   true,
-        //'menu_icon'     =>   IMAGES . 'event.svg',
+	'menu_icon'     =>   'dashicons-calendar-alt',
         'has_archive'   =>   true,
         'rewrite'       =>   'eventos',
         'supports'      =>   $supports
