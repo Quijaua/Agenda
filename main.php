@@ -3,7 +3,7 @@
  * Plugin Name: Quijaua - Eventos
  * Description: Gerenciamento de eventos
  * Version: 0.0.1
- * Author: Eduardo Alencar de Oliveira
+ * Author: Eduardo Alencar de Oliveira, Rafael Bantu
  * License: GPL3
  * Depends: Meta Box
  */
@@ -155,7 +155,7 @@ function quijauaagenda_shortcode() {
                       <div class="<%= day.classes %>" id="<%= day.id %>">
                         <% if (day.events.length > 0) { %>
                             <% _.each(day.events, function(event){ %>
-                          <div class="tooltip event <%= event.class %>" title="<p><h1><%= event.title%><h1><br/>Descrição: <%= event.description%><br/>Horário:<%= event.time%><br/> Local: <%= event.place%><br/> Link para informações: <%= event.link%> </p>"><%= day.day %></div>
+                          <div class="tooltip event <%= event.class %>" title="<p><h1><%= event.title%><h1><br/>Descrição: <%= event.description%><br/>Horário:<%= event.time%><br/> Local: <%= event.place%><br/> Link para informações: <a href='<%= event.link%>'><%= event.link%></a> </p>"><%= day.day %></div>
                         <% }) %>
                         <% } %>
                         <% if (day.events.length  == 0) { %>
