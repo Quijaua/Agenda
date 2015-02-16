@@ -156,7 +156,7 @@ function quijauaagenda_shortcode() {
                       <div class="<%= day.classes %>" id="<%= day.id %>">
                         <% if (day.events.length > 0) { %>
                             <% _.each(day.events, function(event){ %>
-                          <div class="event <%= event.class %>"><%= day.day %></div>
+                          <div class="tooltip event <%= event.class %>" title="<p><h1><%= event.title%><h1><br/>Descrição: <%= event.description%><br/>Local: <%= event.place%><br/> Link para informações: <%= event.link%> </p>"><%= day.day %></div>
                         <% }) %>
                         <% } %>
                         <% if (day.events.length  == 0) { %>
@@ -215,7 +215,7 @@ function quijauaagenda_scripts() {
         wp_enqueue_script('quijauaagenda-underscore', 'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js', array(), '1.0.0', true);
         wp_enqueue_script('quijauaagenda-moment2', QUIJAUAAGENDA_JS_URL . 'CLNDR/example/moment.js', array(), '1.0.0', true);
         wp_enqueue_script('quijauaagenda-clndr', QUIJAUAAGENDA_JS_URL . 'CLNDR/src/clndr.js', array(), '1.0.0', true);
-
+        wp_enqueue_script('quijauaedital-tooltipster', QUIJAUAEDITAIS_JS_URL . 'tooltipster/js/jquery.tooltipster.min.js', array(), '1.0.0', true);
         wp_enqueue_script('quijauaagenda-main', QUIJAUAAGENDA_JS_URL . 'main.js', array('jquery'), '1.0.0', true);
 
         $events = array();
