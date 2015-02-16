@@ -139,7 +139,6 @@ function quijauaagenda_shortcode() {
         <br />
         <input type="submit" value="ENVIAR" id="btn-send-frm-agenda" />
     </form>
-    <a href="#" class="events-of-month">Eventos nesse mês</a>
     <script type="text/template" id="clndr-template">
         <div class="clndr-controls">
             <div class="clndr-previous-button">&lsaquo;</div>
@@ -156,7 +155,7 @@ function quijauaagenda_shortcode() {
                       <div class="<%= day.classes %>" id="<%= day.id %>">
                         <% if (day.events.length > 0) { %>
                             <% _.each(day.events, function(event){ %>
-                          <div class="tooltip event <%= event.class %>" title="<p><h1><%= event.title%><h1><br/>Descrição: <%= event.description%><br/>Local: <%= event.place%><br/> Link para informações: <%= event.link%> </p>"><%= day.day %></div>
+                          <div class="tooltip event <%= event.class %>" title="<p><h1><%= event.title%><h1><br/>Descrição: <%= event.description%><br/>Horário:<%= event.time%><br/> Local: <%= event.place%><br/> Link para informações: <%= event.link%> </p>"><%= day.day %></div>
                         <% }) %>
                         <% } %>
                         <% if (day.events.length  == 0) { %>
