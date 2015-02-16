@@ -59,7 +59,7 @@ moment.locale("pt-br");
             });
 
             //tooltispter
-            $('.tooltip').tooltipster({contentAsHTML: true});
+            $('.tooltip').tooltipster({contentAsHTML: true,theme: 'tooltipster-noir'});
         },
         adjacentDaysChangeMonth: true,
     });
